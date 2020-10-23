@@ -1,4 +1,21 @@
-import { Controller } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { Controller, Get, Param } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller()
-export class UsersController {}
+export class UsersController {
+  constructor(private readonly userService: UsersService) {}
+
+  @ApiOperation({ summary: 'Get common users' })
+  @Get('common')
+  async getCommon() {
+    return await this.userService.getCommonUsers();
+  }
+
+  @ApiOperation({ summary: 'Get user details' })
+  @Get(':id/details')
+  async getDetails(@Param('id') id: string) {
+    return await this.userService.getUserDetails(id);
+  }
+}

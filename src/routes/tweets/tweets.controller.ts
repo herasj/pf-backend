@@ -15,6 +15,36 @@ export class TweetsController {
     return randomTweet[0];
   }
 
+  @ApiOperation({ summary: 'Get latest 25 tweets' })
+  @Get('latest')
+  async getLatest() {
+    return await this.tweetService.getLatest();
+  }
+
+  @ApiOperation({ summary: 'Get negative tweets' })
+  @Get('negative')
+  async getNegative() {
+    return await this.tweetService.getNegativeTweets();
+  }
+
+  @ApiOperation({ summary: 'Get location' })
+  @Get('location')
+  async getLocation() {
+    return await this.tweetService.getLocation();
+  }
+
+  @ApiOperation({ summary: 'Count political tweets' })
+  @Get('count/political')
+  async countPoliticalTweets() {
+    return { count: await this.tweetService.countPoliticalTweets() };
+  }
+
+  @ApiOperation({ summary: 'Count tweets' })
+  @Get('count')
+  async countTweets() {
+    return { count: await this.tweetService.countTweets() };
+  }
+
   @ApiOperation({ summary: 'Update political' })
   @Put('random')
   async updatePolitical(@Body() data: UpdatePoliticalTweetDTO) {
