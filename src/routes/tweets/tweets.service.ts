@@ -9,9 +9,11 @@ export class TweetsService {
   constructor(
     @InjectModel('tweets') private readonly tweetModel: Model<ITweetsModel>,
   ) {}
-  findRandom = async () =>
-    await this.tweetModel.findOne({ political: { $exists: false } }).lean();
-
+  findRandom = async (): Promise<ITweetsModel[]> =>
+    await this.tweetModel.aggregate([
+      { $match: { political: { $exists: false } } },
+      { $sample: { size: 1 } },
+    ]);
   updateOne = async (data: UpdatePoliticalTweetDTO) =>
     await this.tweetModel
       .findByIdAndUpdate(data._id, {

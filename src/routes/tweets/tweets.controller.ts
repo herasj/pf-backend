@@ -11,7 +11,8 @@ export class TweetsController {
   @ApiOperation({ summary: 'Get random tweet' })
   @Get('random')
   async getRandom() {
-    return await this.tweetService.findRandom();
+    const randomTweet = await this.tweetService.findRandom();
+    return randomTweet[0];
   }
 
   @ApiOperation({ summary: 'Update political' })
