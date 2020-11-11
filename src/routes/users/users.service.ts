@@ -13,10 +13,13 @@ export class UsersService {
     await this.userModel
       .find({})
       .limit(25)
-      .select('name username counter')
+      .select('userId name username counter')
       .sort('counter')
       .lean();
 
   getUserDetails = async (_id: string) =>
     await this.userModel.findById(_id).lean();
+
+    getUserDetailsByUsername = async (username: string) =>
+    await this.userModel.findOne({username}).lean();
 }

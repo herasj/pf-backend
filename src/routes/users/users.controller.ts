@@ -18,4 +18,10 @@ export class UsersController {
   async getDetails(@Param('id') id: string) {
     return await this.userService.getUserDetails(id);
   }
+
+  @ApiOperation({ summary: 'Get user details by username' })
+  @Get('username/:username/details')
+  async getDetailsByUsername(@Param('username') username: string) {
+    return await this.userService.getUserDetailsByUsername(username);
+  }
 }

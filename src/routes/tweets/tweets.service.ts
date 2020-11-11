@@ -17,11 +17,40 @@ export class TweetsService {
     ]);
 
   getLatest = async (): Promise<ITweetsModel[]> =>
-    await this.tweetModel
-      .find({ political: true })
-      .sort('createdAt')
-      .limit(25)
-      .lean();
+    await this.tweetModel.aggregate([
+      {
+        '$match': {
+          'political': true, 
+          'sentimentScore.predominant': 'NEGATIVE'
+        }
+      }, {
+        '$lookup': {
+          'from': 'users', 
+          'localField': 'userId', 
+          'foreignField': 'userId', 
+          'as': 'user'
+        }
+      }, {
+        '$unwind': {
+          'path': '$user'
+        }
+      }, {
+        '$project': {
+          'tweetId': 1, 
+          'username': '$user.username', 
+          'name': '$user.name', 
+          'createdAt': {
+            '$toDate': '$createdAt'
+          }
+        }
+      }, {
+        '$sort': {
+          'createdAt': -1
+        }
+      }, {
+        '$limit': 25
+      }
+    ])
 
   getNegativeTweets = async (): Promise<ITweetsModel[]> =>
     await this.tweetModel
