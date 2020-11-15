@@ -1,0 +1,13 @@
+version: "3"
+services:
+  backend:
+    image: herasj23/pf-services:v0.2
+    container_name: pf-services
+    restart: always
+    env_file:
+      - ./.env
+    build:
+      context: ./pf-backend
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"

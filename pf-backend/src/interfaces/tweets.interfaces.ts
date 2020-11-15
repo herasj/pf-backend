@@ -1,3 +1,4 @@
+import { ApiOperation, ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 export interface ITweetsModel extends Document {
   tweetId: string;
@@ -40,4 +41,21 @@ export interface ISentiment {
 export interface ILocation {
   latitude: number;
   longitude: number;
+}
+
+export class ITweetResponse {
+  @ApiProperty({type: String})
+  _id: string;
+  
+  @ApiProperty({type: String})
+  tweetId: string;
+
+  @ApiProperty({type: String})
+  username: string;
+
+  @ApiProperty({type: String})
+  name: string;
+
+  @ApiProperty({type: String})
+  createdAt: string;
 }
