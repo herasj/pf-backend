@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . /app/
 
-RUN ["ls", "-la"]
-
 RUN ["npm","i"]
 
 RUN ["npm", "run","build"]
