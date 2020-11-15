@@ -1,12 +1,8 @@
-FROM node:12
+FROM node:12-alpine
 
 WORKDIR /app
 
-COPY *.json ./
-
-COPY .env ./
-
-COPY src src
+COPY . /app/
 
 RUN ["npm","i"]
 
