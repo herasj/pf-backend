@@ -2,20 +2,18 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Get the version
-      id: getTag
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-    - name: Echo
-      run: echo ${{ steps.getTag.outputs }}
+      - uses: actions/checkout@v2
+      - name: Get the version
+        id: getTag
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Echo
+        run: echo ${{ steps.getTag.outputs.VERSION }}
