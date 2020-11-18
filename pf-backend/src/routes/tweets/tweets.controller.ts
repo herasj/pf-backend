@@ -30,6 +30,12 @@ export class TweetsController {
     return await this.tweetService.getNegativeTweets();
   }
 
+  @ApiOperation({ summary: 'Get details of tweet' })
+  @Get(':id/details')
+  async getDetails(@Param('id') tweetId: string) {
+    return await this.tweetService.getDetails(tweetId);
+  }
+
   @ApiOkResponse({type: [ITweetResponse], description: 'Returns an array of tweets'})
   @ApiOperation({ summary: 'Get tweets from user (Page size = 10)' })
   @Get('user/:userId')
