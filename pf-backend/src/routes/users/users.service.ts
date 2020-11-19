@@ -12,12 +12,50 @@ export class UsersService {
   ) {}
 
   getCommonUsers = async () =>
-    await this.userModel
-      .find({})
-      .select('userId name username counter')
-      .sort('-counter')
-      .limit(25)
-      .lean();
+    await this.tweetModel.aggregate([
+      {
+        $match: {
+          political: true,
+        },
+      },
+      {
+        $group: {
+          _id: '$userId',
+          counter: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: 'userId',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: {
+          path: '$user',
+        },
+      },
+      {
+        $project: {
+          userId: '$user.userId',
+          name: '$user.name',
+          username: '$user.username',
+          counter: 1,
+        },
+      },
+      {
+        $sort: {
+          counter: -1,
+        },
+      },
+      {
+        $limit: 25,
+      },
+    ]);
 
   getUserDetails = async (_id: string) => {
     const user = await this.userModel.findById(_id).lean();

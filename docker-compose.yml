@@ -1,7 +1,7 @@
 version: "3"
 services:
   backend:
-    image: herasj23/pf-services:v0.4
+    image: herasj23/pf-services:v0.5
     container_name: pf-services
     restart: always
     env_file:
