@@ -79,6 +79,7 @@ export class TweetsService {
         $project: {
           tweetId: 1,
           username: '$user.username',
+          sentimentScore: 1,
           name: '$user.name',
           createdAt: {
             $toDate: '$createdAt',

@@ -12,13 +12,13 @@ services:
     ports:
       - "3000:3000"
   # models:
-  #   image: herasj23/pf-services:v0.2
-  #   container_name: pf-services
+  #   image: herasj23/pf-ml:v0.5
+  #   container_name: pf-ml
   #   restart: always
   #   env_file:
   #     - ./.env
   #   build:
-  #     context: ./pf-backend
+  #     context: ./pf-ml
   #     dockerfile: ./Dockerfile
   #   ports:
-  #     - "3000:3000"
+  #     - "3001:3001"
