@@ -14,9 +14,9 @@ export class UsersService {
   getCommonUsers = async () =>
     await this.userModel
       .find({})
-      .limit(25)
       .select('userId name username counter')
-      .sort('counter')
+      .sort('-counter')
+      .limit(25)
       .lean();
 
   getUserDetails = async (_id: string) => {

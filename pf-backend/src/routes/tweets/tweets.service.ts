@@ -21,6 +21,12 @@ export class TweetsService {
       { $sample: { size: 1 } },
     ]);
 
+    findRandomPolitical = async (): Promise<ITweetsModel[]> =>
+    await this.tweetModel.aggregate([
+      { $match: { political: { $exists: true } } },
+      { $sample: { size: 1 } },
+    ]);
+
   getDetails = async (tweetId: string) =>{
     const tweet = await this.tweetModel.findOne({ tweetId }).lean();
     const user: any = await this.userModel.findOne({userId: tweet.userId}).select('userId name username verified counter' ).lean()
@@ -116,6 +122,7 @@ export class TweetsService {
       {
         $project: {
           tweetId: 1,
+          sentimentScore: 1,
           username: '$user.username',
           name: '$user.name',
           createdAt: {
