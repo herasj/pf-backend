@@ -15,7 +15,14 @@ export class TweetsController {
     const randomTweet = await this.tweetService.findRandom();
     return randomTweet[0];
   }
-  
+
+  @ApiOperation({ summary: 'Get random political tweet' })
+  @Get('random/political')
+  async getRandomPolitical() {
+    const randomTweet = await this.tweetService.findRandomPolitical();
+    return randomTweet[0];
+  }
+
   @ApiOkResponse({type: [ITweetResponse], description: 'Returns an array of tweets'})
   @ApiOperation({ summary: 'Get latest tweets (Page size = 10)' })
   @Get('latest')
@@ -28,6 +35,12 @@ export class TweetsController {
   @Get('negative')
   async getNegative() {
     return await this.tweetService.getNegativeTweets();
+  }
+
+  @ApiOperation({ summary: 'Get details of tweet' })
+  @Get(':id/details')
+  async getDetails(@Param('id') tweetId: string) {
+    return await this.tweetService.getDetails(tweetId);
   }
 
   @ApiOkResponse({type: [ITweetResponse], description: 'Returns an array of tweets'})

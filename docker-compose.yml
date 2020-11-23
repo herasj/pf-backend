@@ -1,7 +1,7 @@
 version: "3"
 services:
   backend:
-    image: herasj23/pf-services:v0.2
+    image: herasj23/pf-services:v0.5
     container_name: pf-services
     restart: always
     env_file:
@@ -11,3 +11,14 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
+  model:
+    # image: herasj23/pf-ml:v0.5
+    container_name: pf-ml
+    #restart: always
+    env_file:
+      - ./.env
+    build:
+      context: ./pf-ml
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
