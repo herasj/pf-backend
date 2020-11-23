@@ -11,14 +11,14 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "3000:3000"
-  # models:
-  #   image: herasj23/pf-ml:v0.5
-  #   container_name: pf-ml
-  #   restart: always
-  #   env_file:
-  #     - ./.env
-  #   build:
-  #     context: ./pf-ml
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     - "3001:3001"
+  model:
+    # image: herasj23/pf-ml:v0.5
+    container_name: pf-ml
+    #restart: always
+    env_file:
+      - ./.env
+    build:
+      context: ./pf-ml
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
