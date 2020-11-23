@@ -4,18 +4,21 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt-get update && \
-    apt-get install -y \
-    python3 python3-numpy python3-nose python3-pandas python-h5py \
-    python python-numpy python-nose python-pandas python3-h5py \
-    pep8 python-pip python3-pip python-wheel \
-    python-sphinx && \
-    pip install --upgrade setuptools
+RUN ["ls", "-a"]
 
-RUN ["pip", "install", "-r", "requirements.txt"]
+RUN ["cd"]
+# RUN apt-get update && \
+#     apt-get install -y \
+#     python3 python3-numpy python3-nose python3-pandas python-h5py \
+#     python python-numpy python-nose python-pandas python3-h5py \
+#     pep8 python-pip python3-pip python-wheel \
+#     python-sphinx && \
+#     pip install --upgrade setuptools
 
-RUN ["python", "./src/stanzaSpanish.py"]
+# RUN ["pip", "install", "-r", "requirements.txt"]
 
-EXPOSE 5000
+# RUN ["python", "./src/stanzaSpanish.py"]
 
-CMD [ "python", "./src/main.py"]
+# EXPOSE 8000
+
+# CMD ["gunicorn", "-w 4", "-b", "0.0.0.0:8000", "main:app"]
