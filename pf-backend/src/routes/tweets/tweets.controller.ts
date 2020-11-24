@@ -23,6 +23,12 @@ export class TweetsController {
     return randomTweet[0];
   }
 
+   @ApiOperation({summary: 'Get graph info (Latest 15 extraction dates)'})
+   @Get('graph')
+   async getGraphInfo(){
+     return await this.tweetService.graphInfo()
+   }
+
   @ApiOkResponse({type: [ITweetResponse], description: 'Returns an array of tweets'})
   @ApiOperation({ summary: 'Get latest tweets (Page size = 10)' })
   @Get('latest')

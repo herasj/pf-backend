@@ -6,6 +6,7 @@ import { IUserModel } from '../../interfaces/users.interfaces';
 import { UpdatePoliticalTweetDTO } from './dtos/tweet.dto';
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as moment from 'moment';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -21,15 +22,68 @@ export class TweetsService {
       { $sample: { size: 1 } },
     ]);
 
-    findRandomPolitical = async (): Promise<ITweetsModel[]> =>
+  findRandomPolitical = async (): Promise<ITweetsModel[]> =>
     await this.tweetModel.aggregate([
       { $match: { political: { $exists: true } } },
       { $sample: { size: 1 } },
     ]);
 
-  getDetails = async (tweetId: string) =>{
+  graphInfo = async () =>
+    await this.tweetModel.aggregate([
+      {
+        $match: {
+          $or: [
+            {
+              political: true,
+            },
+            {
+              'accuracy.political': {
+                $gte: 0.6,
+              },
+            },
+          ],
+          'sentimentScore.predominant': 'NEGATIVE',
+        },
+      },
+      {
+        $project: {
+          createdAt: {
+            $dateToString: {
+              date: '$sentimentScore.createdAt',
+              format: '%Y-%m-%d',
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$createdAt',
+          counter: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          _id: -1,
+        },
+      },
+      {
+        $limit: 15,
+      },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
+    ]);
+
+  getDetails = async (tweetId: string) => {
     const tweet = await this.tweetModel.findOne({ tweetId }).lean();
-    const user: any = await this.userModel.findOne({userId: tweet.userId}).select('userId name username verified counter' ).lean()
+    const user: any = await this.userModel
+      .findOne({ userId: tweet.userId })
+      .select('userId name username verified counter')
+      .lean();
     const political = await this.tweetModel
       .find({ userId: user.userId, political: true })
       .countDocuments();
@@ -41,12 +95,18 @@ export class TweetsService {
       })
       .countDocuments();
     user.counter = { political, hate };
-    return {tweet, user}
-  }
-    
+    return { tweet, user };
+  };
+
   getTodayTweets = async (): Promise<number> =>
     await this.tweetModel
-      .find({ 'sentimentScore.createdAt': { $gte: new Date() } })
+      .find({
+        'sentimentScore.createdAt': {
+          $gte: moment()
+            .startOf('day')
+            .toDate(),
+        },
+      })
       .countDocuments()
       .lean();
 
@@ -57,7 +117,16 @@ export class TweetsService {
     await this.tweetModel.aggregate([
       {
         $match: {
-          political: true,
+          $or: [
+            {
+              political: true,
+            },
+            {
+              'accuracy.political': {
+                $gte: 0.6,
+              },
+            },
+          ],
           'sentimentScore.predominant': 'NEGATIVE',
           userId,
         },
@@ -103,7 +172,16 @@ export class TweetsService {
     await this.tweetModel.aggregate([
       {
         $match: {
-          political: true,
+          $or: [
+            {
+              political: true,
+            },
+            {
+              'accuracy.political': {
+                $gte: 0.6,
+              },
+            },
+          ],
           'sentimentScore.predominant': 'NEGATIVE',
         },
       },
@@ -151,17 +229,43 @@ export class TweetsService {
 
   countTweets = async (): Promise<number> =>
     await this.tweetModel
-      .find({ political: { $exists: true } })
+      .find({})
+      .or([
+        { political: { $exists: true } },
+        {
+          'accuracy.political': { $exists: true },
+        },
+      ])
       .countDocuments();
 
   countPoliticalTweets = async (): Promise<number> =>
-    await this.tweetModel.find({ political: true }).countDocuments();
+    await this.tweetModel
+      .find()
+      .or([
+        { political: true },
+        {
+          'accuracy.political': {
+            $gte: 0.6,
+          },
+        },
+      ])
+      .countDocuments();
 
   getLocation = async (): Promise<ITweetsModel[]> =>
     await this.tweetModel.aggregate([
       {
         $match: {
-          political: true,
+          $or: [
+            {
+              political: true,
+            },
+            {
+              'accuracy.political': {
+                $gte: 0.6,
+              },
+            },
+          ],
+          'sentimentScore.predominant': 'NEGATIVE',
         },
       },
       {
