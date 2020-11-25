@@ -84,9 +84,10 @@ export class TweetsController {
     return { count: await this.tweetService.countPoliticalTweets() };
   }
 
-  @ApiOperation({ summary: 'Update political' })
+  @ApiOperation({ summary: 'Update polarization' })
   @Put('random')
   async updatePolitical(@Body() data: UpdatePoliticalTweetDTO) {
-    return await this.tweetService.updateOne(data);
+    const polarization = data.political
+    return await this.tweetService.updateOne(data._id, polarization);
   }
 }

@@ -13,6 +13,7 @@ export interface ITweetsModel extends Document {
   url?: string;
   sentimentScore: ISentiment;
   political: boolean;
+  polarization: boolean;
 }
 
 export interface ITweet {
@@ -28,6 +29,7 @@ export interface ITweet {
   url?: string;
   sentimentScore: ISentiment;
   political: boolean;
+  polarization: boolean;
 }
 
 export interface ISentiment {

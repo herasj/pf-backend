@@ -41,6 +41,7 @@ export const TweetSchema = new Schema(
     location: LocationSchema,
     sentimentScore: SentimentSchema,
     political: { type: Boolean },
+    polarization: { type: Boolean, required: false },
   },
   { id: false, versionKey: false },
 );

@@ -11,6 +11,10 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class TweetsService {
+  private regex = new RegExp(
+    'izquierda|derecha|tibio|Petro|Uribe|Duque|Farc|ELN|Disidencias|castrochavismo|mermelada|corruptos|petristas|uribestia',
+    'ig',
+  );
   constructor(
     @InjectModel('tweets') private readonly tweetModel: Model<ITweetsModel>,
     @InjectModel('users') private readonly userModel: Model<IUserModel>,
@@ -18,7 +22,12 @@ export class TweetsService {
 
   findRandom = async (): Promise<ITweetsModel[]> =>
     await this.tweetModel.aggregate([
-      { $match: { political: { $exists: false } } },
+      {
+        $match: {
+          $or: [{ political: true }, { 'accuracy.political': { $gte: 0.6 } }],
+          polarization: {$exists: false}
+        },
+      },
       { $sample: { size: 1 } },
     ]);
 
@@ -290,10 +299,10 @@ export class TweetsService {
       },
     ]);
 
-  updateOne = async (data: UpdatePoliticalTweetDTO) =>
+  updateOne = async (_id: string, polarization: boolean) =>
     await this.tweetModel
-      .findByIdAndUpdate(data._id, {
-        political: data.political,
+      .findByIdAndUpdate(_id, {
+        polarization,
       })
       .lean();
 }
